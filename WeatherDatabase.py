@@ -66,6 +66,14 @@ class WeatherDatabase:
         except sqlite3.IntegrityError:
             print(f'Cannot insert: {weatherData["timestamp"]}, {weatherData["city"]}, {weatherData["lat"]}, {weatherData["lon"]}, {weatherData["description"]}, {weatherData["temperature"]}, {weatherData["feelsLike"]}, {weatherData["pressure"]}, {weatherData["humidity"]}, {weatherData["windSpeed"]}')
 
+    def getAverageTemperature(self, city: str, start: int|float, end: int|float) -> float:
+        """
+        Calculates the average temperature of a city between two timestamps
+        """
+        command = "SELECT AVG(TEMPERATURE) FROM WEATHER WHERE CITY=? AND TIMESTAMP >= ? AND TIMESTAMP <= ?"
+        self.cursor.execute(command, (city, start, end))
+        return self.cursor.fetchone()[0]
+
     def flush(self) -> None:
         """
         Flushes any outstanding database commits
